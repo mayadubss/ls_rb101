@@ -21,7 +21,7 @@ def win?(first, second)
                     :spock => %w(rock scissors),
                     :lizard => %w(paper spock),
                     :scissors => %w(lizard paper)}
-  true if winning_combos[first.to_sym].include?(second)
+  winning_combos[first.to_sym].include?(second)
 end
 
 def display_result(player, computer)
