@@ -16,16 +16,12 @@ def prompt(message)
 end
 
 def win?(first, second)
-  (first == 'rock' && second == 'scissors') ||
-    (first == 'rock' && second == 'lizard') ||
-    (first == 'paper' && second == 'rock') ||
-    (first == 'paper' && second == 'spock') ||
-    (first == 'spock' && second == 'rock') ||
-    (first == 'spock' && second == 'scissors') ||
-    (first == 'lizard' && second == 'paper') ||
-    (first == 'lizard' && second == 'spock') ||
-    (first == 'scissors' && second == 'lizard') ||
-    (first == 'scissors' && second == 'paper')
+  winning_combos = {:rock => %w(scissors lizard),
+                    :paper => %w(rock spock),
+                    :spock => %w(rock scissors),
+                    :lizard => %w(paper spock),
+                    :scissors => %w(lizard paper)}
+  true if winning_combos[first.to_sym].include?(second)
 end
 
 def display_result(player, computer)
