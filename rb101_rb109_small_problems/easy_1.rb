@@ -35,7 +35,7 @@ puts is_odd?(-17)  # => true
 puts is_odd?(-8)   # => false
 puts is_odd?(0)    # => false
 puts is_odd?(7)    # => true
-# Modulo operator always returns sign of the umber on the right so finding absolute value was not necessary
+# Modulo operator always returns sign of the number on the right so finding absolute value was not necessary
 # Remainder uses sign of number on the left
 
 # List of Digits
