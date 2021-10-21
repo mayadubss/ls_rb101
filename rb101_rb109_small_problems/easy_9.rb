@@ -138,6 +138,7 @@ def swap_name(full_name)
 end
 
 puts swap_name('Joe Roberts') == 'Roberts, Joe'
+# LS solution uses Array#reverse and then joins the array
 
 # Sequence Count
 =begin
@@ -180,7 +181,7 @@ def get_grade(score1, score2, score3)
             C: (70...80).to_a,
             D: (60...70).to_a,
             F: (0...60).to_a}
-  average = ((score1 + score2 + score3) / 3).round
+  average = (score1 + score2 + score3) / 3
   grade = ''
   scoring.each do |letter, range|
     grade = letter.to_s if range.include?(average)
