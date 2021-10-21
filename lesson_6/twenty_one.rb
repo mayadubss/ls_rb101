@@ -27,7 +27,7 @@ def prompt(msg)
 end
 
 def initialize_score
-  scoreboard = {:player => 0, :dealer => 0}
+  { player: 0, dealer: 0 }
 end
 
 def initialize_deck
@@ -178,7 +178,8 @@ end
 
 def display_score(score)
   puts "-------------"
-  prompt "You have #{score[:player]} win(s), Dealer has #{score[:dealer]} win(s)."
+  prompt "You have #{score[:player]} win(s), " \
+         "Dealer has #{score[:dealer]} win(s)."
 end
 
 def continue?
@@ -216,7 +217,7 @@ loop do # game loop
   system 'clear'
   prompt "Let's play Twenty-One, first to #{NUM_ROUNDS} wins is the champ!"
   prompt "Press any key to begin."
-  ans = gets.chomp
+  gets.chomp
 
   score = initialize_score
 
