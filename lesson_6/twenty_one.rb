@@ -1,18 +1,4 @@
-# Twenty-One
-
-=begin
-1. Initialize deck
-2. Deal cards to player and dealer
-3. Player turn: hit or stay
-  - repeat until bust or "stay"
-4. If player bust, dealer wins.
-5. Dealer turn: hit or stay
-  - repeat until total >= 17
-6. If dealer bust, player wins.
-7. Compare cards and declare winner.
-=end
-require 'pry'
-
+VALID_YES_NO = ['yes', 'y', 'no', 'n']
 CARD_VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 CARD_SUITS = ['Spade', 'Diamond', 'Club', 'Heart']
 NUMBER_VALUES = { '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6,
@@ -111,22 +97,26 @@ def player_move(player_hand, dealer_hand, deck)
     player_hand = hit!(player_hand, deck) if move == 'H'
     break if move == 'S' || bust?(player_hand)
   end
-  player_hand
 end
 
 def dealer_move(player_hand, dealer_hand, deck)
+  hits = 0
   loop do # dealer move loop
     if sum_hand(dealer_hand) >= DEALER_HIT_LIMIT
-      prompt "Dealer stayed."
+      case hits
+      when 0 then prompt "Dealer stayed."
+      else prompt "Dealer hit #{hits} time(s) and stayed."
+      end
       break
     else
-      prompt "Dealer hit."
-      dealer_hand = hit!(dealer_hand, deck)
-      break if bust?(dealer_hand)
-      display_table(player_hand, dealer_hand)
+      hits += 1
+      hit!(dealer_hand, deck)
+      if bust?(dealer_hand)
+        prompt "Dealer hit #{hits} time(s) and busted."
+        break
+      end
     end
   end
-  dealer_hand
 end
 
 def detect_winner(player_hand, dealer_hand)
@@ -173,7 +163,6 @@ def increment_score!(score, player_hand, dealer_hand)
   when :player_win
     score[:player] += 1
   end
-  score
 end
 
 def display_score(score)
@@ -193,10 +182,15 @@ def champ?(score)
 end
 
 def play_again?
-  puts "-------------"
-  prompt "Would you like to play again? y/n"
-  ans = gets.chomp.downcase
-  ans == 'y'
+  ans = nil
+  loop do
+    puts "-------------"
+    prompt "Would you like to play again? yes/no"
+    ans = gets.chomp.downcase
+    break if VALID_YES_NO.include?(ans)
+    prompt "Invalid choice."
+  end
+  ans.start_with?('y')
 end
 
 def conclude_game(player_hand, dealer_hand, score)
@@ -228,26 +222,14 @@ loop do # game loop
     # player turn
     system 'clear'
     prompt "It is your turn."
-    player_hand = player_move(player_hand, dealer_hand, deck)
-    if bust?(player_hand)
-      score = increment_score!(score, player_hand, dealer_hand)
-      conclude_game(player_hand, dealer_hand, score)
-      break if champ?(score)
-      continue? ? next : break
-    end
+    player_move(player_hand, dealer_hand, deck)
 
     # dealer turn
     system 'clear'
     prompt "It is the dealer's turn."
-    dealer_hand = dealer_move(player_hand, dealer_hand, deck)
-    if bust?(dealer_hand)
-      score = increment_score!(score, player_hand, dealer_hand)
-      conclude_game(player_hand, dealer_hand, score)
-      break if champ?(score)
-      continue? ? next : break
-    end
+    dealer_move(player_hand, dealer_hand, deck) unless bust?(player_hand)
 
-    score = increment_score!(score, player_hand, dealer_hand)
+    increment_score!(score, player_hand, dealer_hand)
     conclude_game(player_hand, dealer_hand, score)
     break if champ?(score)
     continue? ? next : break
